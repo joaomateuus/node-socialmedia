@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  email         String   @unique
+  password      String
+  profile_picture String?
+  posts         Post[]   
+  likes         Like[]   
+  comments      Comment[] 
+  shares        Share[]  
+}
+
+model Post {
+  id           Int      @id @default(autoincrement())
+  content      String
+  media_type   MediaType
+  media_url    String?
+  creation_date DateTime
+  author       User     @relation(fields: [authorId], references: [id])
+  authorId     Int
+  likes        Like[]
+  comments     Comment[]
+  shares       Share[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+}
+
+model Comment {
+  id            Int      @id @default(autoincrement())
+  content       String
+  creation_date DateTime
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  post          Post     @relation(fields: [postId], references: [id])
+  postId        Int
+}
+
+model Share {
+  id            Int      @id @default(autoincrement())
+  share_date    DateTime
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  post          Post     @relation(fields: [postId], references: [id])
+  postId        Int
+}
+
+enum MediaType {
+  TEXT
+  IMAGE
+  VIDEO
+}
+
