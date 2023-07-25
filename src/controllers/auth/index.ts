@@ -6,12 +6,11 @@ const authService = new AuthService();
 
 export class AuthController {
     async createUser (req: Request, res: Response) {
-        if(req.file !== undefined) {
-            const fileName = `http://localhost:3000/uploads/images/${req.file.filename}`
-            req.body["profile_picture"] = fileName
-            console.log(req.body);	
-        }
-        
+        // if(req.file !== undefined) {
+        //     const fileName = `http://localhost:3000/uploads/images/${req.file.filename}`
+        //     req.body["profile_picture"] = fileName
+        //     console.log(req.body);	
+        // }
         try {
             const createdUser = await authService.createUserService(req.body);
             return res.status(201).json(createdUser)
