@@ -8,7 +8,11 @@ const createServer = (): express.Application => {
     app.use(express.urlencoded({ extended: true }))
     app.use(express.json());
     app.use(morgan('dev'));
+
+    app.use("/uploads/images", express.static("uploads/images"))
     app.use("/account/auth", authRoutes)
+    
+    
     app.use(cors({
         origin: '*'
     }));
