@@ -1,16 +1,10 @@
 import { Request, Response } from "express";
 import { AuthService } from "../../services/auth";
-import { Prisma } from "@prisma/client";
 
 const authService = new AuthService();
 
 export class AuthController {
-    async createUser (req: Request, res: Response) {
-        // if(req.file !== undefined) {
-        //     const fileName = `http://localhost:3000/uploads/images/${req.file.filename}`
-        //     req.body["profile_picture"] = fileName
-        //     console.log(req.body);	
-        // }
+    async createUserController(req: Request, res: Response) {
         try {
             const createdUser = await authService.createUserService(req.body);
             return res.status(201).json(createdUser)
@@ -20,10 +14,24 @@ export class AuthController {
         }
     }
 
-    async editUser (req: Request, res: Response) {}
+    async editUserController(req: Request, res: Response) {
+        // if(req.file !== undefined) {
+        //     const fileName = `http://localhost:3000/uploads/images/${req.file.filename}`
+        //     req.body["profile_picture"] = fileName
+        //     console.log(req.body);	
+        // }
+    }
 
-    async deleteUser (req: Request, res: Response) {}
+    async deleteUserController(req: Request, res: Response) {}
 
-    async login (req: Request, res: Response) {}
+    async loginUserController(_req: Request, _res: Response): Promise<Response>{
+        try {
+            const { username, password } = _req.body;
+            const data = await authService.loginUserService(username, password);
+            return _res.status(200).json(data)
+        } catch (error: any) {
+            return _res.status(400).json({error: error.message})
+        }
+    }
 
 }

@@ -1,6 +1,7 @@
 import { User } from "../../interfaces/User";
 import { prisma } from "../../config/db";
 import bcrypt from "bcrypt";
+import { GenerateTokenProvider } from "../../providers/generate-token";
 
 export class AuthService {
     async createUserService(data: User) {
@@ -35,10 +36,26 @@ export class AuthService {
                 email,
                 username,
                 password: hashedPassword,
-                profile_picture: data.profile_picture ? data.profile_picture : null
             }
         });
         const { password:_, ...user } = newUser
         return user
+    }
+
+    async loginUserService(username: string, password: string){
+        const user = await prisma.user.findFirst({where: {username}});
+        if (!user) {
+            throw new Error( "Email or password are incorrect")
+        }
+        
+        const checkPassword = await bcrypt.compare(password, user.password)
+        if (!checkPassword) {
+            throw new Error ("Email or password are incorrect")
+        }
+        
+        const tokenProvider = new GenerateTokenProvider;
+        const token = await tokenProvider.generateToken(user.id);
+
+        return {username: user.username, token: token}
     }
 }
