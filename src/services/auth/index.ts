@@ -49,9 +49,7 @@ export class AuthService {
     }
 
     async loginUserService(username: string, password: string){
-        console.log(username, password);
         const user = await prisma.user.findFirst({where: {username}});
-        console.log(user);
         if (!user) {
             throw new Error( "Email or password are incorrect")
         }
