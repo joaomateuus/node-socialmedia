@@ -5,10 +5,14 @@ import { GenerateTokenProvider } from "../../providers/generate-token";
 
 export class AuthService {
     async createUserService(data: User) {
-        const { username, email, password } = data;
+        const { username, email, name, surname, password } = data;
 
         if(!username) {
             throw new Error("Username is required");
+        }
+
+        if(!name || !surname) {
+            throw new Error("Name and surname are required");
         }
 
         if(!email) {
@@ -34,6 +38,8 @@ export class AuthService {
         const newUser = await prisma.user.create({
             data: {
                 email,
+                name,
+                surname,
                 username,
                 password: hashedPassword,
             }
@@ -43,7 +49,9 @@ export class AuthService {
     }
 
     async loginUserService(username: string, password: string){
+        console.log(username, password);
         const user = await prisma.user.findFirst({where: {username}});
+        console.log(user);
         if (!user) {
             throw new Error( "Email or password are incorrect")
         }

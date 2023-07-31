@@ -17,6 +17,7 @@ export const authMiddleware = (_req: Request, _res: Response, next: NextFunction
         if (!user) {
             _res.status(403).json({message: "User not found permission denied"})
         }
+        _req.body.user_id = user_id
         next();
     } catch (error) {
         return _res.status(401).json({ message: `Auth failed, error: ${error}`});

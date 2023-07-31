@@ -30,7 +30,7 @@ export class AuthController {
             const data = await authService.loginUserService(username, password);
             return _res.status(200).json(data)
         } catch (error: any) {
-            return _res.status(400).json({error: error.message})
+            return _res.status(403).json({error: error.message})
         }
     }
 
