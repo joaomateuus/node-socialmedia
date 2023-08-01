@@ -5,7 +5,13 @@ import { GenerateTokenProvider } from "../../providers/generate-token";
 
 export class AuthService {
     async createUserService(data: User) {
-        const { username, email, name, surname, password } = data;
+        const { 
+            username,
+            email,
+            name,
+            surname,
+            password 
+        } = data;
 
         if(!username) {
             throw new Error("Username is required");

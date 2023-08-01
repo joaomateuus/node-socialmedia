@@ -9,8 +9,17 @@ export class AuthController {
             const createdUser = await authService.createUserService(req.body);
             return res.status(201).json(createdUser)
         } catch (error: any) {
-            res.status(400)
-            return res.json({error: error.message})
+            return res.status(400).json({error: error.message})
+        }
+    }
+
+    async loginUserController(_req: Request, _res: Response): Promise<Response>{
+        try {
+            const { username, password } = _req.body;
+            const data = await authService.loginUserService(username, password);
+            return _res.status(200).json(data)
+        } catch (error: any) {
+            return _res.status(403).json({error: error.message})
         }
     }
 
@@ -24,14 +33,6 @@ export class AuthController {
 
     async deleteUserController(req: Request, res: Response) {}
 
-    async loginUserController(_req: Request, _res: Response): Promise<Response>{
-        try {
-            const { username, password } = _req.body;
-            const data = await authService.loginUserService(username, password);
-            return _res.status(200).json(data)
-        } catch (error: any) {
-            return _res.status(403).json({error: error.message})
-        }
-    }
+    
 
 }
