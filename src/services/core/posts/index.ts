@@ -2,9 +2,13 @@ import { Post } from "@prisma/client";
 import { prisma } from "../../../config/db";
 
 export class PostService{
-    async getPostsService(data: Post){
-        const posts = await prisma.post.findMany()
-        return posts
+    async getPostsService(){
+        const posts = await prisma.post.findMany({
+            orderBy: {
+                creation_date: 'desc'
+            }
+        })
+        return posts ? posts : []
     }
 
     async createPostService(data: Post){
@@ -15,8 +19,10 @@ export class PostService{
             authorId,
         } = data;	
 
-        const creation_date = new Date();
+        if(!content) throw new Error("Content is required")
+        if(!authorId) throw new Error("Media type is required")
 
+        const creation_date = new Date();
         const newPost = await prisma.post.create({
             data: {
                 content,

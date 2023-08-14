@@ -13,21 +13,15 @@ export class AuthService {
             password 
         } = data;
 
-        if(!username) {
-            throw new Error("Username is required");
-        }
-
         if(!name || !surname) {
             throw new Error("Name and surname are required");
         }
 
-        if(!email) {
-            throw new Error("Email is required");
-        }
-
-        if(!password) {
-            throw new Error("Password is required");
-        }
+        if(!username) throw new Error("Username is required");
+        
+        if(!email) throw new Error("Email is required");
+        
+        if(!password) throw new Error("Password is required");
 
         const userExists = await prisma.user.findFirst({where: {
             OR: [
@@ -56,9 +50,7 @@ export class AuthService {
 
     async loginUserService(username: string, password: string){
         const user = await prisma.user.findFirst({where: {username}});
-        if (!user) {
-            throw new Error( "Email or password are incorrect")
-        }
+        if (!user) throw new Error( "Email or password are incorrect")
         
         const checkPassword = await bcrypt.compare(password, user.password)
         if (!checkPassword) {
